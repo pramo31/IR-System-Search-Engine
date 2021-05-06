@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+# JetBrains IDE
+.idea/
+/.idea
+*/.idea
+
+ir_system/*
+uic_ir_system/*
