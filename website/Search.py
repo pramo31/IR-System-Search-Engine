@@ -2,6 +2,8 @@ from flask import Flask, render_template, request
 from engine import RetrievalSystem
 import os
 
+from evaluation.Evaluator import evaluate
+
 app = Flask(__name__)
 
 
@@ -14,6 +16,7 @@ def index():
 def search():
     query = request.args["query"]
     results = RetrievalSystem.retrieve_documents(vector_model, query)
+    # evaluate(vector_model, query, 10)
     return render_template("search.html", query=query, results=results)
 
 

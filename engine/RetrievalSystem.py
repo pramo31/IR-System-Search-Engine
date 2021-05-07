@@ -1,5 +1,6 @@
-from crawler import WebScraper, Document
+from crawler import WebScraper
 from engine.VectorModel import InvertedIndexer
+from evaluation.Evaluator import *
 from processor.PreProcessor import LemmatizerTextProcessor
 from processor.Tokenizer import Tokenizer
 from utils.Utils import *
@@ -147,41 +148,6 @@ def retrieve_documents(vector_model, query):
     return relevant_docs
 
 
-def evaluate_retrieval_systems(retrieved_documents, relevant_documents, precision, recall, thresholds):
-    for threshold in thresholds:
-        retrieved = set(retrieved_documents[0:threshold])
-        retrieved_relevant = retrieved.intersection(relevant_documents)
-        recall[threshold] = recall.get(threshold, 0) + (len(retrieved_relevant) / len(relevant_documents))
-        precision[threshold] = precision.get(threshold, 0) + (len(retrieved_relevant) / len(retrieved))
-
-
-def evaluate_system(vector_model):
-    dr = DocumentReader()
-    query_file = 'queries.txt'
-    queries = dr.read_file(query_file)
-
-    relevance_file = 'relevance.txt'
-    relevance_dict = generate_relevance_dict(relevance_file)
-
-    query_num = 0
-    threshold = [10, 50, 100, 500]
-    precision = {}
-    recall = {}
-    for q in queries:
-        query_num += 1
-        retrieved_docs = retrieve_documents(vector_model, q)
-        print(f"Retrieved {len(retrieved_docs)} documents")
-        evaluate_retrieval_systems(retrieved_docs, relevance_dict[query_num], precision, recall, threshold)
-
-    print('Retrieval System Evaluation')
-    print()
-    for t in threshold:
-        print(f'Threshold : Top {t} Documents')
-        print(f'Precision : {round(precision[t] / query_num, 3)}')
-        print(f'Recall : {round(recall[t] / query_num, 3)}')
-        print()
-
-
 # def convert(docs):
 #     new_docs = {}
 #     for k, v in docs.items():
@@ -232,8 +198,10 @@ if __name__ == "__main__":
     # page rank
     page_rank = get_page_rank(documents, root_folder=root_folder)
 
+    # Top 10 page ranks
+    # print(sorted([(v, k) for k, v in page_rank.items()], key=lambda x: x[0], reverse=True)[:10])
+
     # inverted index
     vector_model = get_vector_space_model(documents, page_rank, root_folder=root_folder)
 
-    # TODO
     # evaluate_system(vector_model)

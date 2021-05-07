@@ -42,21 +42,13 @@ def read_pickle(filename):
     return obj
 
 
-def evaluate_retrieval_systems(retrieved_documents, relevant_documents, precision, recall, thresholds):
-    for threshold in thresholds:
-        retrieved = set(retrieved_documents[0:threshold])
-        retrieved_relevant = retrieved.intersection(relevant_documents)
-        recall[threshold] = recall.get(threshold, 0) + (len(retrieved_relevant) / len(relevant_documents))
-        precision[threshold] = precision.get(threshold, 0) + (len(retrieved_relevant) / len(retrieved))
-
-
 def generate_relevance_dict(relevance_file):
     dr = DocumentReader()
     relevance_query_map = {}
     relevance = dr.read_file(relevance_file)
     for r in relevance:
-        q, doc = r.split()
-        relevance_query_map.setdefault(int(q), set()).add(int(doc))
+        q, doc = [a.strip() for a in r.split(">")]
+        relevance_query_map.setdefault(q.lower(), set()).add(http_secure_url(canonicalize_url(doc)))
     return relevance_query_map
 
 
