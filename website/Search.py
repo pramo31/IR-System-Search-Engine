@@ -47,9 +47,9 @@ if __name__ == "__main__":
         "SCHEDULER_DISK_QUEUE": 'scrapy.squeues.PickleFifoDiskQueue',
         "SCHEDULER_MEMORY_QUEUE": 'scrapy.squeues.FifoMemoryQueue'
     }
-    crawl_limit = 15000
-    root_folder = '../ir_system'
-    # root_folder = '../uic_ir_system'
+    crawl_limit = 500
+    # root_folder = '../ir_system'
+    root_folder = '../uic_ir_system'
     name = 'uic'
     start_url = ['https://www.cs.uic.edu']
     allowed_domains = ['uic.edu']
